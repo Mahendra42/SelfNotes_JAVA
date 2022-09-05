@@ -1,0 +1,215 @@
+Java Persistance API:
+---------------------
+Content : -
+*******************************************************
+
+	- Basic Architecture.
+	- ORM Component.
+	- Entity Manager.
+	- JPQL
+	- Advanced Mapping.
+	- Entity RelationShip
+	- Criteria and more..
+
+**************************************************************
+JPA ?
+*****
+	JPA is just a specification and several implementations are available like hibernate,eclipselink etc.
+
+	JPA is like an interface which provides a set of rules and guidelines that must be followed by the implementation class.
+	It is better to use JPA along with the implementation class so that we can replace it with other implementations..
+
+************************************************************************************
+
+**IMP points:******
+
+	- JPA provides the facility to map,store,update and retrieve data from the relational DB and Viceversa..
+	- JPA implementation is typically called JPA Provide.
+	- JPA uses the persistance meta data for defining the mapping b/w the java objects and database tables.
+	- JPA provides the persistance metadata by using both annotations as well as xml but when we are using both annotations and xml ,xml configuration overrides the annotations.
+
+*********************************************************************
+
+JPA Entity:
+***********
+	- In general entity is a java class having properties and method which defines an object and the total process we are doing is performed for this object state.
+
+some of the entity properties used in ORM
+
+	- Persistability : An object is said to be persistent if it is stored in the database and retrievd at anytime.
+	- Persistent Identity : it is like giving primary key to our object which is stored in the RDBMS.
+	- Transactionality : it ensures whatever the changes made in the db either be succes or failed atomically.
+	- Granuality : entities should not be primitives,primitive wrappers or build in functions with single dimensionaln state.
+
+*****************************************************************************
+Entity MetaData :
+*****************
+	- each entity is associated with some meta datathat represents the information of it.
+	The meta data exists in the following ways 
+		1.Annotations.-- it is present inside the class
+		2.XML -- it is present in seperate file i:e out side of the class.
+
+For creating an entity we use :
+*******************************
+	@Entity : which indicates that this class is an entity 
+	@Id : field that holds the persistent identifying properties.
+	@ElementCollection-- to store multiple obj in single entity inside a entity class.
+	@Embeddable  -- mention this annotation on the top of dependency class so that it can be injected into the dependent class.
+	@one-to-one mapping
+	@ OneToMany(targetEntity=Library.class)
+
+	@OneToOne(cascade=CascadeType.PERSIST)  
+
+JPA EntityManager:
+******************
+
+In JPA we have Persistance Class.which is used for creating the Entity manager Factory and this factory is used for creating Entity manger on this manger we can perform data persistance.
+*********************************************************************************************
+code used in jpa version connecting to db and performing our operations:
+------------------------------------------------------------------------
+
+EntityMangerFactory emf = Persistant.CreateEntityManagerFactory("persistant xml file");
+EntityManager em=emf.createEntityManager();
+em.createTransaction().begin();
+em.persist(Entity that we want to store in the db.);
+em.Transaction().close();
+etc;
+
+***********************************************************************************************
+ configuration file:--
+-----------------------
+<persistence>  
+<persistence-unit name="Student_details">  
+      
+    <class>com.javatpoint.jpa.student.StudentEntity</class>  
+  
+<properties>  
+<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>  
+<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/studentdata"/>  
+<property name="javax.persistence.jdbc.user" value="root"/>  
+<property name="javax.persistence.jdbc.password" value=""/>  
+<property name="eclipselink.logging.level" value="SEVERE"/>  
+<property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>  
+</properties>  
+  
+    </persistence-unit>  
+</persistence> 
+
+******************************************************************************************************
+for collection dependency a seperate table is created 
+
+scenario : 1. when we collection property in a class that is allowing some customised object we are using @ElementCollection and embeddable annotation it is finally generating two one is dependent object table without having collection data and some other table generated with the dependency fields and dependent pkey.
+
+*******************************************************************************************************
+Association :
+-----------
+	- it is like an object id depended on other object for managing this things we have relationships
+	
+	1.one-to-one Mapping -- single valued association.in this association one instance of entity is associated atmost with another entity.it means source entity is associated or mapped atmost one instance of target entity.
+	
+	2.one-to-many mapping --- in this mapping one entity is associated with collection valued association i:e in this type of association the instance of one entity can be mapped with any number of instances of another entity.
+						  - in this scenario 3 tables created one for each and one generated by maintaining the relationship b/w 2 by only PID's.
+
+	3.many-to-one Mapping ---
+
+************************************************************************************************************
+Cascading Operations:
+	- in JPA if any operations are performed on an entity that is applicable only for that object,it is not valid for other entities that are related to this entity.
+
+The javax.persistance.cascade enum provides a list  of enum types which provides the relationship between the entities.this operation are valid for any type of mappings.
+************************************************************************************************************
+JPQL--Java Persistance query Language :    it is used to create our own queries based on the entity properties and jpa takes care of converting this into SQl based on dialect.
+------------------------------------
+	createQuery("jpql query..") --> dynamic query.
+---->Static query : @NamedQuery(name="" query="")-- have a possibility to write a query on the top of the entity class and this can be accessed by using EM methods .
+
+EntityManager interfaces-- EM also having methods for creating the queries.
+
+for executing the queries, we have
+query Interface :-- having methods to perform excution process.
+
+	- int executeUpdate() - This method executes the update and delete operation.
+	- int getFirstResult() - This method returns the first positioned result the query object was set to retrieve.
+	- int getMaxResults() - This method returns the maximum number of results the query object was set to retrieve.
+	- java.util.List getResultList() - This method returns the list of results as an untyped list.
+	- Query setFirstResult(int startPosition) - This method assigns the position of first result to retrieve.
+	- Query setMaxResults(int maxResult) - This method assigns the maximum numbers of result to retrieve.
+
+JPQL --- by using jpql we can generate both static as well as dynamic queries.
+JPQL bulk data Operation :we can perform -- fetch,update,delete.
+
+********************************************************************************************
+Criteria : It is an alternative way of generating JPQL queries.
+
+	EntityManager em = emf.createEntityManager();  
+	CriteriaBuilder cb=em.getCriteriaBuilder();  
+	CriteriaQuery<StudentEntity> cq=cb.createQuery(StudentEntity.class);  
+
+JPA Inheritance overview : -
+-------------------------
+Annotation which are used in inheritance concept :
+	- @Inheritance
+	- @MappedSuperclass
+	- @DiscriminatorColumn
+	- @DiscriminatorValue
+
+If we didn't pass the name of discriminator column and its value then JPA consider it by default. It considers DTYPE as discriminator column name and the name of the entity as discriminator value.
+
+JPA Inheritance Strategies:
+	1.Single table strategy.-- >   @Inheritance(strategy=InheritanceType.SINGLE_TABLE)  
+	2.joined Strategy. ------ >   @Inheritance(strategy=InheritanceType.JOINED)  
+	3.Table-per-class strategy.> @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+
+
+*******************************************************************************************************
+********************************************************************************************************
+				----------> HIBERNATE FRAMEWORK BY JAVATPOINT <-----------
+*********************************************************************************************************
+*********************************************************************************************************
+Hibernate is a java framework that simplifies the development of java application to interact with db.
+it is a light weight,open source,ORM tool.
+Hibernate implements the specifications of JPA for data persistance.
+ORM tool internally uses JDBC api to interact with the DB.
+
+advantages:
+************
+	1.open source and light weight.
+	2.Fast performane -- due to internal cache.
+	3.Database independent query -- HQL
+	4.Automatic table creation.
+
+Hibernate Architecture :
+*************************
+The hibernate architecture includes many objects such as persistance object,session factory,session,transaction etc.
+ 
+
+	Application --->persistent object--->Hibernate[Mapping file,Configuration file] --->Database.
+
+
+Elements of hibernate Architecture:-
+***************************************
+1.SessionFactory -- it is a factory of sessions and client of connection providers,it holds second level cache of data.
+2.Session :-- it provides an interface between application and datastored in db.it is a short lived object and wraps the jdbc connection.
+		     it is a factory of Transaction,Query,and criteria .
+		     it holds a first level cache,
+		     this interface provides methods to insert,update,delete the object.
+3.Transaction : transaction object specifies the atomic unit of work.
+4.Connection provider : - it is a factory of jdbc connections acts as a abstract for DriverManger and DataSource.
+5.TransactionFactory -- it is a factory of transaction.
+
+******************************************************
+Xml mapping configuration-- for mapping the entity class 
+Annotations based configuration -- we can replace xml mapping by annotations.
+but the hibernate configuration is required for both the configurations.
+
+Generator class -- which is used for assigning a primary key for the entity.
+
+SQL Dialect: -- The dialect specifies the type of database used in hibernate so that the respective queries will gennerate in the application.
+
+<property name="dialect">org.hibernate.dialect.Oracle9Dialect</property>  
+*************************************************************************************
+Hibernate inheritance:
+we can map the inheritance hierarchy class with the table by using three methodlogies.
+	1.Table per hierarchy.-- we can map the whole hierarchy by single table only, an extra column is created in the table to identify the class.
+	2.Table per concrete class.
+	3.table per subclass.

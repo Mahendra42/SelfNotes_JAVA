@@ -1,0 +1,592 @@
+04072022:
+---------
+Spring : Dependency Injection, Compliment to J2EE
+
+In Normal what we are doing is, If two classes are depended on each other (A--->B).
+we are creating the object B in Class A and using them to invoke the fuctionality or to get the property to get our requirement.
+
+so by using the spring framework we are delegating this responsibility to IOC Container..
+
+Inversion Of Control : We are delegating the responsibility of creating the object creation and initialisation to third party called IOC.
+
+Spring Modules:
+---------------
+
+Core Container -(heart of spring framework which manages dependency injection and Inversion of control and life cycle ).
+--------------
+	- Beans
+	- Core
+	- Context
+	- SpEL
+
+Data Access/Integration:
+-------------------------
+Spring provides an abstraction layer for performing database related integration work.
+	- JDBC.
+	- JMS.
+	- ORM.
+	- Transaction.
+Web Module:
+----------
+	- MVC.
+	- webSocket.
+	- Portlet
+	- Servlet
+Test:
+-----
+AOP
+Aspects
+Instrumentation
+Messaging .
+
+-----------end modules-------------------------------------------------
+
+Spring Container:
+-----------------
+	- It is a predefined program or a component that comes with spring framework and it is responsible for creating object,holding in meory and also injecting them into another object as required.so it maintains complete life cycle of beans from creation to destroy.
+	- Container requires Beans(Java Classes) and XML Config(meta data about the object dependency) and this container is accessed by the application and perform the requirement.
+
+Application Context(I):-(it is a spring container used for creating and managing the beans).
+
+The implemented class are 
+	1.ClassPathXMlApplicationContext---which is used to find the xml config on class path.
+	2.FileSystemXMLApplicationCOntext-- .......................................file system.
+	3.AnnotationConfigApplicationContext---which is used when we use the configuration using annotation.
+
+Dependency Injection:
+---------------------------
+	- DI is the process of injection what object requires at run time dynamically..this process is done by Spring framework for us.
+DI is classfed into two types
+
+	1.Setter Injection or property injection:- 
+		we are using setter methods to inject the properties on the object(it will be used for injecting the propertValues as well as for object injection 
+
+	2.Constructor Injection: the container uses dependency injection using constructor.
+
+Spring COnfiguration File:
+--------------------------
+	The spring COnfiguration file uses two things as a input such as Beans and Xml Configuration.
+
+Types of Data:
+--------------
+	1.Primitive type dependencies(byte,short,Char,int,long,float,double,boolean,string).
+		<bean class="Bean">
+			<property name ="id">			//value as an element
+				<value>10</value>		// value as an attribute
+			</property>				//p schema /p namespace.
+		</bean>
+
+	2.Collection.(List,Set,Map,Properties')
+	3.Reference type (a-->b)
+
+---------------------------------------------------------------------------------------------------------------------------------------
+05072022:
+---------
+Dependency Injection:
+	- create a bean.
+	- create the spring configuration:-this is a meta data to the spring container desc all about the pojo class and the dependencies.
+	- create a test class.--create a spring container
+
+property injection:
+--------------------
+-on primitives
+	values as an attribute
+	value as a element
+	p schema
+
+-on collection
+	list
+	set
+	map
+	properties
+
+-on object
+	<ref bean="">--- as a element
+	<         ref> ----as an attrbute
+	<p:property-ref>----as a pschemaa
+
+Life Cycle Methods:
+----------------------
+public void init();
+public void destroy();
+
+	- init() - called when object is created and initialised in the spring container only then it is going to execute the next minute.
+		   - it is used for database connection,servelet connection etc.
+	
+	
+	- destroy() -this method is called before the object is going to destroy.
+			-this is used for closing the connection to db etc.
+
+We can implement life cycle methods using three ways
+	1.XML Configuration.-- init-method="methodname" , destroy-ethod="methodname"
+	2.Spring interfaces-- initialiseBean(I),DisposableBean(I).
+	3.Annotation.--->we have add this dependency in the pom.xml file this is not present from jdk 1.9
+				@PreDestroy
+				@PostConstruct
+by default in spring annotations are disabled ,we can enable by using <context-config-annotation/> element in xml file.
+
+---------------------------------------------------------------
+06072022:
+---------
+Dependency Check:
+	- @Required annotation has to put on setter method only,if we keep on property will get error but it is used for mandatory initialization of a field.
+InnerBeans:
+	-writing a bean inside another bean,it is also one type of dependency injection used only for object reference i:e when there is HAS-A relationship between two objects.
+		<bean>
+			<property>
+				<bean></beam>
+			</property>
+		</bean>
+				
+Bean Scope:
+-----------
+no of objects created in the spring container of a particular bean. 
+	there are 5 types of bean scopes
+		1.singleton : it is a default scope.only one bean or object is created in a spring container no matter how many times it is used or called.
+		2.prototype :a new object is created at each when we used or called.
+		3.request : mostly used in Spring MVC and an object is created per user/session.
+		4.session :  same as request scope.
+		5.globalsession :spring object creates an object globally..
+
+COnstructor Dependency Injection:
+---------------------------------
+Spring starts created objects initialization using constructor arg
+
+As a tag.
+As an attribute : C Schema /C NameSpace.
+As a Ref ..
+
+in order to eliminate Ambiguity problem in Constructor injection we use ---TYPE="int",INDEX="position",NAME="Name of the variable" etc.
+----------------------------------------------------------------
+
+Bean Externalization or Reading Properties :
+	- In our normal programing we used to place all db details in .properties to link these values to our container and injecting them using property placeholder configuration.
+
+	-Steps:
+		1.create the properties file
+		2.Link the properties
+		3.use properties in xml and inject 
+<context: property-placeholder location:"">--->should be include in xml file for loading the properties file into the container..and we can use and inject the properties using spring Expression language i:e ${propertyname}
+
+----------------------------------------------------------
+AutoWiring:
+----------
+previously, we used ref tag for the dependency injection manually now the spring container can autowire the dependency into dependent object.
+
+Wiring: if programmer made wiring the dependency we can it as wiring
+AutoWiring:if spring container does the injects the dependency then we call it has autowiring.
+
+AutoWiring can be done in two ways.
+1.Xml based :
+	-No(default).
+	-By Type //followed setter based injection:- when spring container took the config file it creates the respective bean and when it encounter the autowire by... ,it goes to respective class and check the name or type and checks in the xml file with the info if it identifies the beans ,it will injects
+								- three things we have to keep in mind when we are performing injection BYType-->1.if the beans does not exist it just return null but not throws any exception.
+																					   2.if we keep same bean multiple times in the xml ,it just throws an ambiguity exception.
+																					   3. initially it undergoed through the xml file if finds any autowire keyword and check the respective bean and injects..
+	-By Name //follows setter based injection -- in this case the name of the bean and reference variable in the class should be same
+								 - if we are having two beans with same name then spring container throws an error.
+																
+	-Auto detect(older version)
+	-By Constructor followed constructor based injection : -when spring container encounters the constructor based autowiring,it will go to the particular class and checks the constructor and depended object again it comes backs to the xml file and checks respective bean if it finds it will injects return else the respective bean return null in the optput..
+
+
+2.Annotation
+	- @AutoWired : If we want to inject dependency object into dependent obj we can use autowired annotation.
+			   we can use it at property level,setter method and constructor but we dont need to mentioned anything about this only we have to enable to annotation remaining everything configured by the spring container only.
+ 
+	- @Qualifier:if we were having many beans of same type but varying the names so we can configure the required bean in the program by using @Qualifier followed by name in that.
+
+--------------------------------------------
+Standalone collection:
+----------------------
+	- This is used for re usability and to to create our required collection object.
+	- we will be using util schema for implementing this standalone collection
+	- add the namespaces on the bean like c schema and p schema.
+
+Syntax:
+	<util:CN CN-class="" id="">
+		<value/> or <entry>
+	</util>
+...................................................................
+
+Stereotype Annotation:
+	- so far we used xml configuration for creating beans and performing dependency Injection.
+Now we are going to use spring stereotype annotation to create objects and to perform injection.
+
+Stereotype annotation are used for creating the objects in spring container just like as we created object in config.xml file using <bean> tag.this annotation is as same as bean tage
+	XMl---<bean class="" name ="">  is equalent to @Component
+									class Instructor{}// this annotation creates object by scanning the base package which we placed at the time config and provided base directory.
+									
+									Instructor instructor = new Instructor();//spring container internally creates object in this format ref is same as class name but it is in small case.
+
+	this goes to the each parent and child direcories and creates object based on stereotype annotation.
+we have to keep this in config.xml file for using stereotype annotations--<context:component-scan base-package=""/>
+
+
+-we are using stereotype annotation for creating objects @component,@service,@repository etc ,we should use @scope annotation along with this(scope is used for objects only).
+-by default @stereotype annotation creates object ref using the same class name but in camelcase,we can also give our own name in the @ComponentScan("name").
+-in xml configuration we give or initialise the bean by using property,constructor DI but in this scenario we initialise the object using @Value("") on a state memeber of a class.
+-but for injecting the collection we have to create a standalone collection and inject to a property using @Value("#{collection id}").
+-previously, we were injected object by using ref,autowire byType,byName,constructor,@Autowire,@Qualifier by enabling annotations here also same thing @Autowire annotation.
+
+-----------------------------------
+Spring Expression Language(SpEL):
+-it is actually used to perform some expression and assign a value to variable in a class.
+syntax for using SpEl--@Value("#{2+2>5}").
+
+-----------------------------------------------------------
+
+Injecting interface: In business layer we use Dao layer reference to connect and work with database,here we are using interface so based on the polymorphic criteria the respective interface implemented 
+-------------------  will be injected using @autowired but that interface is implemented by different classes we have to provide which one we have to inject based on @Qualifier annotation.
+
+here in Annotation world <context:component-scan> acts as a meta data to the spring container like we provided config.xml file to the container.
+
+flow : when the excution starts we are passing meta data to the container through component-scan and annotation based on the it will go through each of the package and creates objects where ever we mentioned the stereotype annotations,
+      if any autowired annotation encounters it will check the respective dependency and injects.if we are using interface for Dependency injection it will check the implemented class and injects.if more than one class implemented the interface,
+	we have to pass that particular class by providing the name @qualifier along with @Autowired which is used for injecting a particular object.
+------------------------------------------------------------------------------------------------------------------------------
+07072022
+........
+
+Spring Jdbc:
+		Along with the DI spring framework also simplifies some of the java technologies such JDBC,ORM,JMS etc
+		- Spring jdbc reduces to write a lot of boiler plate code to connect with the database such as creatng a statement,connection etc.
+Spring JDBC=== JDBC Technology(Template)+Template Design pattern(maintains Common COde)
+
+JDBCTemplate------>javax.sql.DataSource(I)
+					|
+					|
+				DriverManagerDataSOurce(c)
+					takes four param - DriverClassName,url,Uname,pwd.
+
+dependencies:
+-------------
+Spring core.
+Spring Context --these two used for DI.
+Spring-Jdbc-- for performing jdbc
+my-sql-connetcor
+
+
+reality usage of Spring Jdbc template
+
+Employee Dao ------->JdbcTemplate----->DataSoure(I)
+	|						|
+	|						|
+EmployeeDaoIMpl 				DriverManagerDataSource(C)
+
+summary:
+	So by the spring jdbc dependency we will get the template class which will do connecting,executing the statements,handling the exceptions and clean up activities.
+we have to make sure the dependency injection in the required area i:e --our Dao layer depends on jdbcTemplate class and jdbcTemplate class depends on driverManagerDataSource layer.
+
+the program execution starts from the main method where we are started by giving meta data to the spring container ,it creates objects and inject the required objects
+here on thing we have to understand ,we are giving total java class details to the Spring container through meta data i:e config.xml it understand the properties to injects and perform dependency Injection.
+we can access the beans from container and perform operation like xtrating the values,invoking the methods.
+
+JdbcTemplate Has many overloaded method for executing DML(insert,delete,update)--->we use execute() and DRL(select) --->queryForObject()-->retrieves only one row and maps to rowmapper ,query()--->retrieves multiple rows and map to result set .
+--------------------------------------------------------------------------
+Spring-ORM:
+-----------
+ORM-- Object relational mapping. In simple words the object specific data is mapping database speific rows and vice-versa.
+previously,developer has to make a sql query and insert the parameters using the object,execute it again developer has to process the result set into java object etc 
+All this work is reduced by ORM tool,it creates the query on fly
+
+JPA(ORM -tool) which is an API
+and the implementors of the specifications are Hibernate,EclipseLink etc.
+
+SImiliar to spring jdbc template ,spring also simplifies the usage of Spring ORM by using HibernateTemple(C) it uses session.
+HibernateTemplate-methods--save,update,delete,get,loadAll etc.
+
+We have to provide some configuration to pojo like @Entity etc
+
+Archetecture:
+
+Product
+
+productDao ----------HibernateTemplate------------SessionFactory(depends on DataSource)
+	|								|
+	|								|
+productDaoImpl						localSessionFactoryBean{
+												dataSource,
+												hibernate properties {
+																key :value
+															hibernate.dialect:org.hibernate.Dialect.MySqlDialect-- this class is responsible for creating the query for the respective Data Base.
+															hibernate.show_sql:true;
+																}, 
+
+												annotated class(poj's configured to DataBase.)
+
+we can also perform transactions.
+
+
+ORM Mapping:
+	- the foremost thing to implent the ORM is to Map our pojo to database specific coulmns
+		for this JPA provides standard annotations such as
+			@Entity.
+			@Id.
+			@Table,
+			@Column.
+
+TransactionManager(I):
+If we want to perform a group of action in a single shot we use Transaction eg: Money Transaction like credit and debit.
+JDBC,Spring Jdbc,Hibernate has it own implementation for performin transactions.
+
+In Hibernate:
+	HibernateTransactionmanager(C)-- create a bean in congig.xml
+	enable annotation deiven environment  <tx:annotation-driven/>
+
+	@Transaction
+	placeOder();
+
+
+step:01---> convert the java bean into entity by using the above annotations.
+step 02---> add configuration in the config file 
+		beans required--
+			1. datasource(I)(DriverMangerDataSOurce(c)--->depends on class name,url,username,password).
+			2.session factory(I)(LocalSessionFactoryBean(C)--->depends on 
+													1.DataSource
+													2.hibernate properties * hibernate-dialect * hibernate.Show_sql.
+													3.Annotated Classes.)
+			3.TransactionManager(I)-HibernateTransactionManager(C)--depends on SessionFactory and enable transactional annotation.
+
+
+hibernate having the methods ---    save()
+						update()
+						delete()
+						get()
+						LoadAll()
+
+working flow: when we run our application .the meta data passed in the form of xml file and component scan,creates the bean and perform dependency injection.finally through transitive object creation and injection we will connection objectand this is pointed to hibernate template
+hibernate is having some predefined methods to perform db opearation .
+
+internally the object is created into sql and vice versa and executed...
+-----------------------------------------------------------------------------------------
+Spring MVC(Model View Controller):-
+---------------------------------
+
+MVC Arcitecture:
+
+		---------------------->to carry data from UI to controller we use @ModelAttribute() and @RequestParam() etc----------------->
+
+	Client----1---->Front Controller or   -----2------->handlermapper----3----->Controller---4----->send Model and View
+	  |^			dispatcher servlet  <-------------6---------------------          <------5--
+	  <--------9---------	|
+	  				|
+             			-----------7--------->viewResolver
+
+					<-----------8---------
+
+	<----------------------to carry data from COntroller to UI We use -ModelAndView object and @ModelMap(to carry data)-------
+
+	- when client sends a request,request goes to the front controller from there it goes to handler mapper and it routes to the respective controller,once business logic execution completed controller returns modekl and view to the dispatcher servlet.
+	 from the frontcontroller response goes to resiurce view resolver there it adds the local view extension to the view and finally the response handover to the end user by render the data in required format.
+
+Spring MVC Application creation Steps:
+	1.Configure the dispatcher servlet.--->servlet config for receiving client requests.
+	2.create the spring configuration.--->config.xml but the name shoud be servlet name followed by - and servlet.
+	3.Configure the view resolver
+	4.create the Controller.
+	5.create the folder structure and view.
+
+---------------------------------------------------------------------------------------------
+09072022:-
+-----------
+
+Configuration for spring mvc:
+
+	- spring-webmvc dependency required..
+	- web.xml configuration-- which acts as a dispatcher servlet where it handles incomming request from the client.
+	- Spring configuration(dispatcher-servlet.xml----spring configuration for ioc container.)
+	- Internal resource view resolver for finding the view.if we are using annotations we have to enable annotations in spring configuration.
+
+Sending data from controller to UI:(data exchange)
+----------------------------------
+ we use ModelAndVIew to exchange data from controller to ui
+	- we are having a method to add data to MOdelAndView --addObject(key,value) key should be string,value should be primitive,object,collection.
+	- we can get this info in UI by using request.getAttribute("key");
+
+scriplet tags in jsp's
+	- for retrieving data from controller to in UI
+
+<%
+Integer id=(Integer)request.getAttribute("id");
+String name=(String)request.getAttribute("name");
+Integer sal=(Integer)request.getAttribute("salary");
+
+out.println(id);
+out.println(name);
+out.println(sal);
+%>
+
+check the code in spring tool suite
+
+Sending data from UI to Controller:
+	- we can send the data to the controller from the ui in two ways 1.HTMl form 2.query Form.
+	1.Html Form
+		when we are dealing with forms in mvc architecture,the container READS the data from the form CONVERTS that data in CREATED OBJECT and SETthoseVALUES and handover to the controller.
+		in controller we can access these values using @ModalAtrribute as a method parameter and access those values.
+	
+
+	2.Query Paramer:
+		- we can also pass the data through the Query to the controller which can be accessed in controller by using @RequestParam()..
+		eg: https//localhost:5050/SpringMVC?key=01&name="mahenda"..
+
+			which can be accessed by @RequestParam("key") int id
+			internally this can converted like 
+				String sid=request.getParamer("key");
+				int id=Integer.parseInt(id);
+	
+			@RequestParam(value="id" required=false defaultValue="123") int id-- order does not matter in accessing the values in the controller.
+
+	- when we are using @MOdelAttribute we need to follow like the name's of the html and properties of java object should be same.
+
+SpringMVC with ORM project:
+COnfiguration:
+			1.web.xml--servlet configuration.
+			2.dispatcher-servlet.xml---spring container
+				- Hibernate Template
+						- sessionFactory(I)--localSessionFactoryBean(c)
+											- DataSource.
+											- Hibernate Propertes.
+											- Annotated Entity Classes.
+
+						-ViewResolver.
+--------------------------------------------------------------------------------------
+10072022:
+--------
+Spring MVC and Ajax using Jquery:
+----------------------------------
+
+AJAX--Asynchronus javaScript and XMl:--go through them by your own that is for getting dynamic response from the server to each field with out making us to wait till last minute and throw duplication message.
+
+AOP:-- Aspect oriented programming
+	- this module makes us to add external functionalities to our class with out changing the actual functionalities of the class.
+
+	we have 7 things to apply Aop on our Object
+	1.Aspect:-- it represent a class which is having extra functionalities to apply on our target object.
+	2.Advice-- to represent functionality in Aspect class
+	3.pointcut: target object methods needs external functionalities.
+	4.jointPoint--- it configure the pointcut and advices.
+	5.Target-- to represent a target object which requires external functionalities.
+	6.weaving-- target object goes to weaving process where it added up with advices.
+	7.proxy-- a proxy object created which is having target object functionalities and external functionalities required.
+
+To represent a pointcut method in Target object:
+	eg:
+		AccessModifier  ReturnType  Package.class.methodName();
+			public       int       Package.class.methodName();
+
+		
+		 *-->Star can be used to represent any AM,RT,PACK,CLASS,MN.
+		..-->dot dot represent current or sub package
+			for method parameters as any type and any number of parameters.
+
+AOP Implementations:
+	-AspectJ
+	-Spring AOP
+		used in spring
+			- AspectJ annotation driven.(using in the this module)
+					@Aspect-- applied on external functionalities class.
+					@Before - Applies on advice i:e method present in Aspect class,represents execute before a particular method executes.
+					@After-- after a method has executed.
+					@AfterReturning-- execute a method method returns a value.
+					@Around -- execute before or after a method execution.
+					@AfterThrowing-- execute this method after a method throwing a exception.
+			-Aspect XMl driven
+			- Classic Spring proxy-based AOP(outdated)
+	-JBoss AOP
+
+Java COnfiguration:
+---------------------
+Starting from spring 3.0 we are completly using java based configuration with out using of xml based configuration.
+so, we are not using any xml configuration for creating the objects etc.
+
+	xml             -      @Configuration
+					class MyConfig
+
+	<bean>  			@bean
+					Car car();
+
+	we use annotationConfigApplicationContext spring conatiner to accees our @annoatated beans
+	@import to import one config bean into others 
+
+Converting web MVC to java config format:
+web.xml(servlet config) ------WebApplicationInitializer this is extended by some other class.
+
+for internalResourceViewResolver
+SpringCOnfig extends WebMvcConfigurerAdapter--should should extend that class for enabling internal resource view resolver.
+
+<mvc:annotation-driven>  @EnableWebMvc
+<Context:Component-scan> @ComponentScan
+springConfiguratiopm :   @Configuration
+
+Steps to migrate mvc to java config
+------------------------------------
+pom.xml ------- war plugin
+dispatcher-servlet.xml-------java config
+web.xml---------WebApplicationInitialiser.
+
+--------------------------------------------------------------------------------
+11072022:
+---------
+
+SPRING BOOT:
+	-spring boot is a module from spring framework by which we can develop a production ready application rapidly.
+	-Spring boot makes spring simpler.
+	-convention over configuration-- the application should follow some definate folder structure so that i will compile and run the class and build the project to war or jar file.
+	-opinionated defaults-- based on the jar available in the class path,spring automatically configure them,if we want to change the default setting with customised configuration we can make them by using properties file.
+					eg:- like if jpa and mysql connector is avails in the class path the spring boot configure them automatically and make a connection with the database.
+	- No xml required in spring boot.
+
+	Spring-boot-starter
+	Spring-boot-starter-web
+	Spring-boot-starter-dataJpa
+	the above dependencies used in pom.xml file these dependencies will pull all the required dependencies.internally each of this dependency is having BOM it have all the information what are all the dependencies required to this dependency.
+
+How does spring works?
+	- spring doesnot generate any code on fly nor use any xml configuration.
+
+	- spring by default came with programming configuration instead of we did configuration for the dispatche servlet,view resolver,hibernate configuration.
+	  spring will done configuration on condition.
+
+	spring has already have those configuration classes in the jar file,the people's at the spring has already created them and those will be enabled based on conditions.
+
+Starter POM's:
+	- we add starter pom's to pom.xml and maven will pull all the required dependencies into the class path and these jar files having Meta-Inf/spring.factories which are implemented by spring developers.
+
+	add jars ----- META-INF/Spring.factories
+
+-------------------------------------------------------------------------
+12072022:
+-----------
+four ways to create a spring boot application
+	1.create a maven project and add the starter dependencies.
+	2.using the spring initialise.
+	3.Using the IDE.
+	4.Using spring boot CLI.
+
+spring data jpa: 
+
+13072022:
+--------
+
+Rest -- Representatinal state transfer
+http methods : POST,GET,PUT,DELETE.
+URI's
+
+---------------------------------------
+13072022:
+--------
+spring by Naveen Reddy 2:30 hrs:
+-------------------------------
+	- dependency + autoConfiguration.
+	- imbedded servers().
+	- spring-boot starter.
+	- application.properties.
+	- dependency Injection.(design pattern)
+	- spring Ioc Container.--responsible for creating beans.
+	- Loosely coupling.
+	- Autowired.  
+	- spring data jpa
+	- why spring generates jar instead of war..
+
+

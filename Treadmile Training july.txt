@@ -1,0 +1,6 @@
+https://github.com/avamsykiran/JavaFSD2to7.git
+
+java.lang
+java.util
+java 08
+serialisation,Deserialisation

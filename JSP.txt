@@ -1,0 +1,134 @@
+JAVA SERVER PAGES [JSP]
+***************************
+	- it is used to create web application.
+	-it is an extension to the servlets.
+
+- A html page consists of html tags and jsp tags.
+
+JSP IS CONVERTED INTO SERVLET WITH THE HELP OF TRANSLATOR.
+
+jsp translator is a part of web server for translating jsp into servlet.
+
+advantages of jsp over servlets:
+*********************************
+- In addition to the servlet features we can use implicit objects,predefined tags,expression language and custom tags .
+- there is a separate for presentation and business logic.
+- no need to recompile and redeploy.
+
+Life cycle of JSP: jspInit(),jspService(),jspDestroy()...
+-------------
+Translation.
+compilation.
+class loading.
+instantiation.
+initialization.
+request processing
+Destroy.
+
+creating a simple jsp page.
+	- with .jsp extension.
+	- we can write java code inside the jsp with in the scriplet tags <% out.println("254")%> 
+
+JSP API:
+********
+it consists of two packages.
+	1.javax.servlet.jsp
+		interfaces--1.JspPage  2. HttpJsPage
+	2.javax.servlet.jsp.tagex
+
+servlets(I)--->jsppage(I)--->httpjspage(I).
+
+Creating jsp in eclipse IDE with Tomcat
+----------------------------------
+1.Create a dynamic web project.
+2.create a a jsp
+3.start the tomcat server and deploy the project.
+
+*************************************************************
+
+JSP Scriplet Tags:[scripting element]
+
+in jsp, we can write java code in side jsp using scriplet tags.
+
+ jsp scripting elements:
+	- scriplet tag  		<%  java code like out.println("hello.") %> only field not methods
+
+	- expression tag:	<%=  statement %>  
+					the code written inside the jsp expression tag is written to the output stream,we dont need to write out.println().it is mainly used for printing the values of a variables or methods.
+
+	- declaration tag.   -- 	<%!  field or method declaration %>
+						it is used for declaring field and methods. 
+
+-------------------------------------------------------------------
+JSP implicit objects :There are 9 implicit objects which are created by the web container ,it is bydafault available to all the jsp pages.
+	
+	object 			Type
+****************************************************************************************
+	out				JspWriter				for writing any data to the buffer.
+	request 			HttpServletRequest		to retrieve parameters from the request.
+	response 			httpServletResponse		to add or manipulate response.
+	config 			ServletConfig			this object can be used to get initialisation param for a particular jsp.speciific to each servlet.
+	application 		ServletContext			this object can be used to get initialisation param for a particular jsp.speciific to the whole application.
+	session 			HttpSession.			which is used for getting session information.
+	pageContext 		PageContext			which is used to set,get or remove attribute of the following scope - page,request,session,application.
+	page 			object	
+	exception 			Throwable.
+
+********************************************************************************************
+
+JSP Directives : JSP directives are the messages that tells the web container how to convert a jsp page into the corresponding servlet
+<%@ directive attribute="value" %>  
+
+There are three types of directives
+
+	1.page directives : page directives defines attribute that apply's to an entire jsp page.	<%@ page attribute="value" %> 
+		Attributes:
+			- import : same as import in java class.
+			-contentType : to define the content type of the response.
+			- extends : same as inheritance.
+			- info : set the info of the jsp page which is retrieved later by the servlet class.
+			- buffer : to set the response size in kilo bytes.
+			-........................
+	
+	2.include directives : the include directive used to include the content of any resource it may be html,file,jsp etc . <%@ include file="resourceName" %> 
+			
+	3.taglib directives: it is used to define a tag library that defines many tags.		<%@ taglib uri="uriofthetaglibrary" prefix="prefixoftaglibrary" %>
+
+
+*********************************************************************************************
+JSP Action Tags : each jsp action tag or element is used to perform some specific task.
+
+Action tags are used to control the flow b/w pages and to use beans.
+*************************************************************************
+		jsp action tag					Description
+*************************************************************************
+		jsp:forward				forward the req and res to another resource.
+		jsp:include					includes another resource
+		jsp:useBean				creates or locates bean object.
+		jsp:getProperty				prints the value of an object
+		jsp:setProperty				sets the value of an object
+		jsp:plugin					embedd another component such as applets.
+		jsp:param
+		jsp:fallback				can be used to print the message if plugin is working. It is used in jsp:plugin.
+
+*****************************************************************************
+Expression language in jsp: simplifies the accessibility of data from java beans,components,session,request,application etc..  ${expression}
+
+
+*********************************************************************************
+
+JSTL : JSP Standard Tag Library.
+********************************
+JSTL represent a set of tags to simplify the jsp development.
+advantages:
+	1.fast development.
+	2.code reusability.
+	3.no need to use sciplet tags.
+
+JSTL: Majorly provides five types of tags.
+
+Core tag : The JSTL core tag provide variable support, URL management, flow control, etc. The URL for the core tag is http://java.sun.com/jsp/jstl/core. The prefix of core tag is c.
+Function tag :The functions tags provide support for string manipulation and string length. The URL for the functions tags is http://java.sun.com/jsp/jstl/functions and prefix is fn.
+Formatting Tags :The Formatting tags provide support for message formatting, number and date formatting, etc. The URL for the Formatting tags is http://java.sun.com/jsp/jstl/fmt and prefix is fmt.
+XMl Tags :The XML tags provide flow control, transformation, etc. The URL for the XML tags is http://java.sun.com/jsp/jstl/xml and prefix is x.
+SQl Tags : The JSTL SQL tags provide SQL support. The URL for the SQL tags is http://java.sun.com/jsp/jstl/sql and prefix is sql.

@@ -1,0 +1,23 @@
+28072022(practice is important..)
+.........
+HIbernate in java implementation in using xml and annotation based if possible try t0 understand relationships
+
+08042022:
+----------
+Spring MVC
+
+06/07 -- linux basics
+**********************
+installing linux.
+basic cmds -- creating,removing,opening,soft link,hard link,folder structure .etc.
+
+08/08/2022:
+-----------
+linux-30min
+Training on rest ful webservices using spring boot.
+jax -rs by java guides.
+
+
+9/08/2022:
+----------
+default exception handling and customised exception handling in sprin rest implementation needed to understand by end of today.

@@ -1,0 +1,49 @@
+java.lang package:
+	- to write a java program most commonly required classes and interfaces are present in the separarte package that is known as java.lang,it is by default it is available to all the classes,we dont need to implement separtly
+The classes which are present in the lang package are
+	1.Object class
+	2.String class
+	3.StringBuffer
+	4.String Builder
+	5.Wrapper Classes
+	6.AutoBoxing and AutoUnboxing.
+
+The Methods present in object class is
+	1.toString()-- to print string representation of object,when we try to print obj ref internally toString method will be invoked.
+			   if our class doesnt have to string method object class to string will be invoked.
+			   it prints classname@Hexa decimal sring representation of object.
+			   if we want to represent object data then we have to override the object class toString() in the class.
+
+		***NOTE : IN STRING,STRINGBUILDER,STRINGBUFFER,COLLECTION AND WRAPPER CLASSES TOSTRING() IS OVERRIDDEN FOR MEANINGFUL REPRESENTATION
+
+	2.hashCode()---* For every object JVM generates a unique number which is nothing but hashcode.
+			   * JVM uses this hashcode for saving the objects in hashrelated data structure like hashMap,hashTable etc.
+			   * if the objects are stored according to hashcode searching becomes easy.
+			   * If we dont overide hashcode() in our class then object class hashcode() will be executed and generates a hashcode based on the address of the object but it doesnot mean this represent address of the object.
+		-when we are not overridden the toString() object class toString() invoked internally object class hashCode() invoked.
+		-if we override the hashcode() in our class then  toString() of object class used our overridden hashcode().
+		-if we override the toSTring() method in our class then it does not invoke object class toString().
+
+
+	3.equals()-- * This method is used for equalence of two objects.
+			 * if our class doesnt contains equals() then object class equals() executed this is for reference comparison.if two objects are pointing to the same objecthen it return true otherwise it returns false.
+
+		-whenever we are overriding equals() we have to consider the following things.
+			* we have to consider propeties of an obect.
+			* we ever are passing heterogenous object the equals() return false but not classcastException we have to handle it false,similiary for null
+
+		***NOTE :IN STRING,WRAPPER AND COLLECTIONS equals() is overidden for content comparison.
+
+	relation b/w equals and ==
+		** if r1==r2 then equals() is always true.
+		** if r1==r2 is false we cannot conclude .equals() either true or false.
+		** if r1.equals(r2) is true we cannot conclude == either true or false.
+		** if r1.equals(r2) is false then == are always false.
+
+	4.clone().
+	5.getClass.
+	6.finalise().
+	7.wait(3).
+	8.notify().
+	9.notifyAll().
+

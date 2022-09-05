@@ -1,0 +1,66 @@
+what is REST -- Representational state transfer.
+
+	- state -- data
+	- Representation means format -- xml,,json,yaml,html etc.
+	- Transfer carrying data between consumer and provider using HTTP protocol.
+- Rest is not an architecture but it is a set of constraints that creates a architextural style.which can be used for building ditributed applications.
+** Rest allows components to access and manage functions within another application.
+
+Some guidelines needs to be referred for implementing Restful(Rest architecture constraints).
+1.Client-server.
+2.Stateless
+3.Cacheable
+4.Uniform interface
+5.layered system
+6.code on demand.
+
+REST API -- uses http request to GET,PUT,POST and DELETE data following the rest standards.
+-Rest api is a set of remote calls using standard methods to return data in specific format.
+
+-Resource -- it is anything that is addressable over the web.which means the resource that can be accessed and transferred between client and server.
+	eg: a search result for a particular item in a web index such as google.
+	- The most popular representations of resources are xml and json.
+
+-URI -- uniform resource identifier :it is used to identify a resource over a web 
+	    - it is like a hyperlink to a resource.
+
+- Representation -- it is a temporal state of an actual data located in a storage device at the time of request.
+	   -  different representation forms are images,text files,xml and json.
+
+HTTP methods :
+	- GET-- it is used to retrieve the resource information only.
+	- POST -- it is used for creating a new resource.
+	- PUT -- primarily used to update the existing resource.
+	-DELETE -- to delete a resource.
+	-PATCH - for partial updation.
+HTTP status codes: for every request the server returns a status code indicating the processing status of the request.
+ 1xx : Information
+2xx : Success -- this indicated that client request was accepted successfully
+	200 :ok
+	201 :created
+	202:accepted
+	204 : no content
+
+3xx : Redirect : it means client has to take some additional actions to complete their requests.
+4xx :Client error : point side error 
+	400 : bad request
+	401 : unauthorised
+	403 : forbidden 
+	404 : not found
+
+5xx : server error
+	500 : internal server error.
+	501 : not implemented
+	502: bad gateway
+	503 : service unavailable
+	504 : gateway Time out.
+*******************************************************************************************
+PAYLOAD in rest api
+------------------
+the payload means the body in http request and response.
+
+Content-type -- it is used to represent represnt payload in http request message. client is responsible 
+Accept -- expected payload format in http response.service provider is responsible for creating the format.
+*************************************************************************************
+
+

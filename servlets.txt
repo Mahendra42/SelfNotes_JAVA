@@ -1,0 +1,150 @@
+Website : it is a collection of web pages that contains text,images,audio,videos etc.Each website has its own internet address to access in the browser.
+websites are of two types 1.static and 2.Dynamic.
+
+1.Client side scripting.-- logic perform on the web pages.
+2.Server side scripting.-- logic performed on the server side. the languages used for developing dynamic pages sych as jsp,servlet,php,.net etc.
+
+ - http protocol is used to make communication channel between client and server and it transfer the data over the web
+ 	like file's,audio,video,html pages etc.it is a stateless means each request is a new request,server cannot the user by default.
+ 
+ - Three fundamental features that makes http more powerful communication protocol.
+	1.Http is media Independent--we can send any type of media as long as client and server handles the data.
+	2.Http is a connectionless : A browser initiates a request and after the request is sent the client disconnect the server and wait for the response.
+	3.Http is a stateless : The client and the server are aware of the current request only,afterwards both forget each other.
+					neither the server nor the client stores the information about the request across the webpages.
+ 
+		Client---Http protocol----->server
+								|----->Server scripting ---->database.
+
+
+Container:
+	The container provides runtime environment for the JavaEE
+	the client gets the static web pages from the server but if we want the pages based on the user input java uses servlet container.
+#Quora
+Web Container is an java application that controls servlet. Servlet do not have a main() method, So they require a container to load them. Container is a place where servlet gets deployed. When a client sends a request to web server that contain a servlet, server sends that request to container rather than to servlet directly. Container then finds out the requested servlet and pass the Http Request and response to servlet and loads the servlet methods i.e. doGet() or do Post(). Example of a web container is Tomcat.
+
+Servlet Container is a part of web Server runs in separate process.we can classify the servlet container in 3 states.
+	1. Standalone : it is integral part of the server like webcontainer is a part of web server like Tomcat etc.
+	2. In-Process : 
+	3.Out-Of-Process :
+The servlet container perform many operations 
+	1.Life cycle management.
+	2.MultiThreading support.
+	3.Object pooling.
+	4.Security.
+
+Server :WEB vs Application.
+	- A server is a devices or computer program that accepts and responds to the request made by the client
+	  it is used to manage the network resource and used for running the applications that provides services..
+
+WEB Server :- web server contains only web or servlet containers which is used for servlets,jsp,jsf,struts.these containers are used for storing the web content.
+Application server : it provides web+Ejb server in the application server.eg:Jboss,glassFish,Weblogic.WebSphere etc.
+  
+Servlet Interface: 
+	- we have to implement this interface either directly or indirectly to implement the servlet.
+	and it provides 3 life cycles those are init(),destroy(), service() and two non life cycle methods.
+	 - life cycle methods invoked by the WebContainer. 
+we can implement servlet by the below ways 
+1.by implementing servlet interface.
+2.by extending generic servlet class and 
+3.by extending the http servlet class
+
+life cycle method of servlet:
+---------------------------------
+initially it loads to the web container.
+creates servlet instances
+1.initialise the servlet by using intit().
+2.service()--- invoked by the container for the each incomming request.
+3.destroy -- destroy the servlet object.
+
+
+......................................................
+Servlet :
+	server container contains helper Application(web container-- tomcat,glassFish,JFish) 
+
+Deployment Descriptor: web.xml where we have servlet configuration for a incoming request.
+
+- we can route servlet request inside another sevlet request by using Request dispatcher.
+
+HttpServlet Request and Response:--
+
+HttpServletRequest and HttpServletResponse are interfaces,we use them as a method parameters in servlet extended class.
+As we know polymorphic mechanism we will get object fom the tomcat server and the respective methods applied on the objects based on our requirement.
+req-- it is an object used to transfer data from client to servlet.
+res -- it is also an object used to send data from the server to the client.
+-------------------------------------------------------------------------------------------------------
+Request Scenario's from one servlet to another servlet :
+
+RequestDispatcher--This concept is used to send Servlet Request with in another servlet.in this case the request data and request is same in both the servlet request
+			  and browser doesn't the internal request's calling to another servlet and it is pointing to the first servlet request and also not expect from where the request is comming back
+
+			This is possible in the sample web application but if we want to interact with some other web application,this concept is not applicable.
+
+		CLient---req1----->Servlet1-----req1------->servlet2
+			<----------------res--------------------
+
+SendRedirect:-- Scenario of Flipkart,Amazon,SnapDeal etc it comes under Amazon....
+			here in this process once we choose the product it directs to payment gateway which comes under paypal application.this particular concept is used in this scenario..
+
+
+			CLient---req1----->Servlet1
+			   |	<---res-----
+			   |
+			   |-----req2------->servlet2
+			    <----res-----------
+
+Passing Data from one servlet to another servlet in SendRedirect scenario i:e URL Rewriting,session,cookie.
+-----------------------------------------------------------------------------------
+
+Session : it is to store the data over a period of time for each user who are using the web application,actually this session object is given by the tomcat server.
+	    it is most used way to transfer data to all the server..
+	- Provides a way to identify a user across more than one pagerequest or visit to a Web site and to store information about that user.
+
+Cookie : Creates a cookie, a small amount of information sent by a servlet toa Web browser, saved by the browser, and later sent back to the server.A cookie's value can uniquelyidentify a client, so cookies are commonly used for session management. 
+
+
+***Servlet Context and servlet config(initial data required for the application):
+-----------------------------------
+Servlet context :-- if we want share a data to all the servlet we can use this:
+web.xml:--
+
+	<context-param>
+		<param-name>name</param-name>
+		<param-value>MahendraReddyM</param-value>
+	</context-param>
+
+config in the program to access: 
+Servlet config: -- if we want to share a infirmation specific to the servlet we can use this inside the servlet of the required one...
+
+***We can configure our dispatcher servlet in two ways one in web.xml the other using annotation on the respective servlet class @WebServlet("/url").
+-----------------------------------------------------------------------------------------------
+StudyToNight Content:--
+--------------------
+WebSite is a collection of web pages,graphics,images etc.
+Web Application is a website with a dynamic functionality on the server side such as FaceBook,Google,Twittor etc.
+
+-Http is a protocol that clients and servers uses over the web to communicate.
+-this is simpiliar to FTP,SMTP protocol but one difference Http is a stateless protocal i:e http support only one one request for connection.
+ it means with the http client can send one request to the server and then disconnect .this mechanism allows more users to connect to a given server over a period of time.
+
+HTTP request can be made with variety of methods such as GET,POST,PUT,DELETE etc..
+
+Servlet : it is a technology used for creating web application.
+A web application is a helper application that resides at server and build dynamic web pages.
+
+the flow of web application
+
+		client-------->web server---->servlet
+			<--------dynamic response <----------
+
+web applications made using Servlet are Secured, Scalable and Robust.
+
+advantages of Servlets
+	-less response time because each request runs in a separate thread.
+	-Servlets are scalable.
+	-Servlets are robust and object oriented.
+	-Servlets are platform independent.
+
+ServletAPi COnsists of two packages
+1.javax.servlet.http
+2.javax.servlet.----------------------

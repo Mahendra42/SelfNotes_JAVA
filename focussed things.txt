@@ -1,0 +1,22 @@
+Servlets
+jsp
+hibernate with se and with spring.
+diff between spring dataJpa and hibernate.
+spring core
+spring mvc:  9:23 PM 8/4/2022
+spring boot
+spring security
+spring AOP
+rest
+soap
+microservices
+junit
+mockito
+mysql and oracle... mangoDB.
+Java script.
+html,css and bootstrap.
+reactjs...Angular js
+core java revision
+linux
+devops
+ 

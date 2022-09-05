@@ -1,0 +1,303 @@
+Hibernate by Naveen DurgaSoft:
+------------------------------
+Types of objects:
+	1.transient
+	2.deatched
+	3.persistent
+
+	- Configuration class is a container for the hibernate. 
+
+Required Things for implenting the Hibernate 
+	- PoJO class
+	- Mapping class
+	- Configuration file
+	- Test the class.
+
+Configurstion_File
+-------------------
+<hibernate-configuration>
+	<session-factory>
+		<database realted configurtion like driver name,url,password,connection pooling./>
+		<hibernate configuration like Dialect,Show_Sql,ddl(hb2ddl)automatically hibernate create tables in the db)/>
+	</<session-factory>
+</hibernate-configuration>
+
+
+Configuratio con = new Configuration().configure();
+SessionFactory sf= con.createSessionFactory();
+Session session(just like a connection in jdbc object) =sf.createSession();
+Dialect vary fro data base to db
+		-mysql
+		-oracle etc.
+hbm2ddl.auto=create.
+		update.
+		create-drop
+		Validate.
+
+
+CRUD Opearion:
+	- For insert,delete and update only we need transaction but for not selectinf the records we dont need transactions.
+to insert data --- save()-- rt pk //execute with out transaction boundaries
+			 persist-- rt void //execute with in transaction boundaries
+			 SaveOrUpdate -- rt -- void.
+
+To Update --	 update(). - by using session ,if the session is already contains the similiar object it will not update the similiar object cooming from the user.
+					
+			Merge().-- it will update the record with out checking the session cache.
+			
+			limitations:-
+				- only non primary keys we can update.
+				- we need to update one complete record and it is not possible to update single value.
+
+
+to delete ---     delete()
+
+to get Single record:
+           	- get (); also know as eager,it fires sql query at the time of get method. 
+		- load(); also known as Lazy,it fores sql query only when it executes not primary key columns..
+
+Primary key AutoGenator:
+------------------------
+	1.Assigned : it is default user has to give the id
+	2.increment--application is responsiblr
+	3.sequence --- both appl and db is responsible.
+	4.identity ---table is responsible for this
+	5.native
+	6.hilo--
+	7.foreign.
+	8.customeGenerator.
+
+HQL(Hibernate query Language.)
+--------------------------------
+
+HQl -- we generate a generate a query based on the object clss and parameter .it is db independent.
+SQL -- we generste a query based on the database table ,it is db dependent.
+by using hql ,it is possible to update primary key as well as single column data in the database.
+
+Quert q=createQuery(hql).
+in query class:
+	1.executeUpdate().-- for dml operation
+	2.uniqueObject().-- for retrieval single record value.
+	3.list().-- for retrieval multiple values
+
+1.insert() --- in HQL it is possible to insert one table data into another table but object data insertiin is not possible.
+2.update() ---
+3.delete() ---
+4.select() ---
+			1. single row select operation
+			2.
+--------------------------------------------------------------
+Configuratio con = new Configuration().configure();
+SessionFactory sf= con.createSessionFactory();
+Session session(just like a connection in jdbc object) =sf.createSession();
+
+query q=s.createQuery("Hql Query");
+int roweffecetd= q.executeUpdate();
+
+------------------------------------------------------------------
+criteria's :
+------------
+we can make select operation on tables by making conditions.
+
+Configuratio con = new Configuration().configure();
+SessionFactory sf= con.createSessionFactory();
+Session session(just like a connection in jdbc object) =sf.createSession();
+Criteria c=session.createCriteria();
+			//select * from table;
+
+Criteria class is having methods to execute for the data is --list(),
+										--uniqueObject().
+
+In order to get data based on the condition we have Restriction class which equals,gt,lt,b/w,distinct etc.
+
+Criterian cr = Restriction.gt("salary",5000);
+ c.add(cr);
+
+only singleColumns and to perform agrregate we have to use projections Class,which is having
+		property() to add columns and return projection
+		projection p= Projections.property("column name");
+
+		criteria.add(p);
+it is vails only for single coulmn but if we want to add multiple columns we have to use projectionsList.
+		projectionList pl= Projections.propertyList();
+		pl.add("c1");
+		pl.add("c2");
+		criteria.setPl(pl);
+	To perform aggregate we have to applythose required function on the projections classs
+		projection p= Projections.avg("column name");// we can perform the same for  different functions based on  our requirement.
+		criteria.add(p);
+	
+using projections we can perform specific column retrieval and aggregate operations like "select id,name,Max(id) from employee"
+where as Restrictions are used for adding conditionalchecks to the sql query like Select * from Employee where id=1;
+
+---------------------------------------------------------------------------------------------------- 
+----------------------------------------------------------------
+ORM :-
+in between we can provide relationship as follows below
+
+1.Inheritance(IS-A)
+	1.Table per class.
+	2.table per sub class.
+	3.table per concrete class.
+
+2.Association (HAS-A)
+	1.one-to-one
+	2.one-to-many
+	3.many-to-one
+	4.mant-to-many
+
+ORM in inheritance:
+-------------------
+					Employee(p)
+					     |
+                    -----------------------------------
+			|			|			|
+ 		SOftEmploy		HardWardEmploy	   AdminRole
+we are maintaining a single table for all the class and we can identify them in the table based on  descriminator column.
+
+Table per Class:
+----------------
+hibernateMapping:
+
+<hibernate-mapping>
+	<class name="employee" table="" schema="">
+	<id name=""/>
+	<discriminator column="etype"/>
+	<remaining field which are common in the child class/>
+	
+		<sub-class name="se" descriminator-value="se">
+			<property name= "tool">
+		</sub-class>
+		.
+		.
+		.
+		.
+		.
+
+	</class>
+</hibernate-mapping>
+
+--maintaining separate table for each class and subclasses having specific fields and id
+	for this we need to change the mapping configuration..
+
+
+Table per Sub-classes
+----------------------
+<hibernate-mapping>
+	<class name="employee" table="" schema="">
+	<property name=""/>
+	
+		<joined-subClass name="bean.class" table="">
+			<property name= "tool">
+			<key column="id">
+		</joine-subClass>
+		.
+		.
+		.
+		.
+		.
+
+	</class>
+</hibernate-mapping>
+
+Table per Concrete-Class:  we dont need to create a table for the parent class
+--------------------------
+<hibernate-mapping>
+	<class name="employee"  schema="">
+	<property name=""/>
+	
+		<union-subClass name="bean.class" table="">
+			<property name= "tool">
+			<key column="id">
+		</union-subClass>
+		.
+		.
+		.
+		.
+		.
+
+	</class>
+</hibernate-mapping>
+-----------------------------------
+HAS- A relationship:
+--------------------
+one to many --- one actor can have many movies
+hibernate--config
+<hibernate-mapping>
+	<class name="bean.Actor" table="actor" schema="">
+		<id name="aid">
+		<property name=""/>
+		<set name="movies" cascade="all">
+			<key column="aid">
+			<one-to-many class="beans.Movie">
+		</set>	 
+	</class>
+</hibernate-mapping>
+
+<hibernate-mapping>
+	<class name="bean.Movie" table="Movie" schema="">
+		<id name="aid">
+		<property name=""/>	 
+	</class>
+</hibernate-mapping>
+
+cascade -- when we are trying to insert parentthe depended child classes will insert
+
+---------------------------------------------
+many-to-one --- many movies can have one actor 
+hibernate--config
+<hibernate-mapping>
+	<class name="bean.Actor" table="actor" schema="">
+		<id name="aid">
+		<property name=""/>	 
+	</class>
+</hibernate-mapping>
+
+<hibernate-mapping>
+	<class name="bean.Movie" table="Movie" schema="">
+		<id name="aid">
+		<property name=""/>
+		<many-to-one class="moviename" name="">
+			<column name="aid"/>
+		</many-to-one>	 
+	</class>
+</hibernate-mapping>
+
+
+
+---------------------------------------------
+pagination:
+-----------
+limiting the data extraction
+which can be achieved by using HQl and Criteria
+case 1: HQL
+
+Session session = sf.createSession();
+Query query= session.createQuery("HQL query..");
+
+init i=1;
+int j=5;
+for(int k=0;k<=query.list().size();k++){
+	q.setFIrst(1);
+	q.setMax(5);
+	List<> l = q.list();
+	i=i+5;
+	j=j+5;
+}
+
+--------------------------------------
+Cache support :--
+
+1.SessionLevel-- for one user.
+2.SessionFactory ---all user
+	- for this we have to maintain one xml cache file and integrate it with hibernate config file.
+values configuration in config file:
+	<Property name="cache.use_second_level_cache">true</property>
+	<proprty name= "cache.region.factory_class">org.hibernate.cache</property>
+	<property name="net.sf.ehcache.configurationCache>"resource/ecache.xml</property>
+we need to mapp this configuration in the respective cached bean mapping file.
+
+3.QueryCache level support.-- for one instance.
+on query we need to add setCache("true") that enables query cache.
+.............................................................................................
+
